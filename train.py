@@ -90,7 +90,7 @@ def validation_epoch(model, criterion: nn.Module,
     return val_loss
 
 def train(model, optimizer: torch.optim.Optimizer, scheduler: Optional[Any],
-          train_loader: DataLoader, val_loader: DataLoader, num_epochs: int, root: str, save_dir: str):
+          train_loader: DataLoader, val_loader: DataLoader, num_epochs: int, root: str = '', save_dir: str = ''):
 
     train_losses, val_losses = [], []
     criterion = nn.CrossEntropyLoss(ignore_index=train_loader.dataset.pad_id_en)
