@@ -90,21 +90,22 @@ def validation_epoch(model, criterion: nn.Module,
     return val_loss
 
 def train(model, optimizer: torch.optim.Optimizer, scheduler: Optional[Any],
-          train_loader: DataLoader, val_loader: DataLoader, num_epochs: int, root: str = '', save_dir: str = ''):
+          train_loader: DataLoader, val_loader: DataLoader, num_epochs: int, root: str = '', save_dir: str = '', silent: bool = False):
 
     train_losses, val_losses = [], []
     criterion = nn.CrossEntropyLoss(ignore_index=train_loader.dataset.pad_id_en)
     
-    run = wandb.init(
-        # Set the project where this run will be logged
-        project="my-awesome-project",
-        # Track hyperparameters and run metadata
-        config={
-            "learning_rate": optimizer.param_groups[-1]['lr'],
-            "epochs": num_epochs,
-            "vocab_size": model.vocab_size_de
-        },
-    )
+    if not silent:
+        run = wandb.init(
+            # Set the project where this run will be logged
+            project="my-awesome-project",
+            # Track hyperparameters and run metadata
+            config={
+                "learning_rate": optimizer.param_groups[-1]['lr'],
+                "epochs": num_epochs,
+                "vocab_size": model.vocab_size_de
+            },
+        )
     
     for epoch in range(1, num_epochs + 1):
         train_loss = training_epoch(
@@ -136,6 +137,9 @@ def train(model, optimizer: torch.optim.Optimizer, scheduler: Optional[Any],
 #         bleu = BLEU()
 #         x = bleu.corpus_score(preds, refs).score
         
+        if silent:
+            continue
+
         with open(root + 'data/val.de-en.de') as file:
             texts = file.readlines()
         with open(save_dir + 'val.de-en.en-pred', 'w') as file:
