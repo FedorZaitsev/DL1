@@ -1,4 +1,3 @@
-from variables import *
 import os
 import torch
 from typing import Union, List, Tuple
@@ -8,9 +7,9 @@ from torch.utils.data import Dataset
 
 class TextDataset(Dataset):
 
-    def __init__(self, save_dir: str, data_file_de: str, data_file_en: str,
+    def __init__(self, data_file_de: str, data_file_en: str,
                  sp_model_prefix: str = 'vocab', max_length: int = 128,
-                 vocab_size_de: int = 10000, vocab_size_en: int = 10000):
+                 vocab_size_de: int = 10000, vocab_size_en: int = 10000, save_dir: st = ''):
 
         self.max_length = max_length
 
