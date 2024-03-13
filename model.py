@@ -7,17 +7,17 @@ import math
 from dataset import TextDataset
 
     
-def generate_square_subsequent_mask(sz):
+def generate_square_subsequent_mask(sz, device):
     mask = (torch.triu(torch.ones((sz, sz), device=device)) == 1).transpose(0, 1)
     mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
     return mask
 
 
-def create_mask(src, tgt, pad_idx_src, pad_idx_tgt):
+def create_mask(src, tgt, pad_idx_src, pad_idx_tgt, device):
     src_seq_len = src.shape[0]
     tgt_seq_len = tgt.shape[0]
 
-    tgt_mask = generate_square_subsequent_mask(tgt_seq_len)
+    tgt_mask = generate_square_subsequent_mask(tgt_seq_len, device)
     src_mask = torch.zeros((src_seq_len, src_seq_len),device=device).type(torch.bool)
 
     src_padding_mask = (src == pad_idx_src).transpose(0, 1)
@@ -123,7 +123,7 @@ class TransformerModel(nn.Module):
         
         for i in range(self.max_length - 1):
             memory = memory.to(device)
-            tgt_mask = (generate_square_subsequent_mask(ys.size(0))
+            tgt_mask = (generate_square_subsequent_mask(ys.size(0), device)
                         .type(torch.bool)).to(device)
             out = self.decode(ys, memory, tgt_mask)
             out = out.transpose(0, 1)

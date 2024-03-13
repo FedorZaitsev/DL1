@@ -42,7 +42,7 @@ def training_epoch(model, optimizer: torch.optim.Optimizer, criterion: nn.Module
         tgt_input = tgt[:-1, :]
         
         pad_de, pad_en = loader.dataset.pad_id_de, loader.dataset.pad_id_en
-        src_mask, tgt_mask, src_padding_mask, tgt_padding_mask = create_mask(src, tgt_input, pad_de, pad_en)
+        src_mask, tgt_mask, src_padding_mask, tgt_padding_mask = create_mask(src, tgt_input, pad_de, pad_en, device)
 
         logits = model(src, tgt_input, src_mask, tgt_mask,src_padding_mask, tgt_padding_mask, src_padding_mask)
         optimizer.zero_grad()
@@ -76,7 +76,7 @@ def validation_epoch(model, criterion: nn.Module,
         tgt_input = tgt[:-1, :]
         
         pad_de, pad_en = loader.dataset.pad_id_de, loader.dataset.pad_id_en
-        src_mask, tgt_mask, src_padding_mask, tgt_padding_mask = create_mask(src, tgt_input, pad_de, pad_en)
+        src_mask, tgt_mask, src_padding_mask, tgt_padding_mask = create_mask(src, tgt_input, pad_de, pad_en, device)
 
         logits = model(src, tgt_input, src_mask, tgt_mask,src_padding_mask, tgt_padding_mask, src_padding_mask)
 
